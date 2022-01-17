@@ -93,9 +93,13 @@ function filterExpression(
       case 'notnull':
         return `"${condition.column}" is not null`;
       case 'from':
-        return `"${condition.column}" from ${relativeDateFilterExpression(condition.value)}`;
+        return `"${condition.column}" starting in/on ${relativeDateFilterExpression(
+          condition.value,
+        )}`;
       case 'until':
-        return `"${condition.column}" until ${relativeDateFilterExpression(condition.value)}`;
+        return `"${condition.column}" ending in/on ${relativeDateFilterExpression(
+          condition.value,
+        )}`;
       default:
         // only for typescript to be happy and see we always have a return value
         return '';
@@ -174,7 +178,16 @@ class StepLabeller implements StepMatcher<string> {
   }
 
   cumsum(step: Readonly<S.CumSumStep>) {
-    return `Compute cumulated sum of "${step.valueColumn}"`;
+    // For retrocompatibility with old configurations
+    if ('valueColumn' in step) {
+      return `Compute cumulated sum of "${step.valueColumn}"`;
+    }
+
+    if (step.toCumSum.length === 1) {
+      return `Compute cumulated sum of "${step.toCumSum[0][0]}"`;
+    } else {
+      return `Compute cumulated sum of ${formatMulticol(step.toCumSum.map(a => a[0]))}`;
+    }
   }
 
   custom(_step: Readonly<S.CustomStep>) {

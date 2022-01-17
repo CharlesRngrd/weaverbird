@@ -1,5 +1,44 @@
 # Changelog (weaverbird npm package)
 
+## Unreleased
+
+### Added
+
+- UI: display columns of the right dataset in join step
+
+### Changed
+
+- Rollup step no longer require one aggregation column (useful to create referentials) (by @CharlesRngrd)
+- Mongo: concatenate won't fail on non-string columns (by @CharlesRngrd)
+
+### Fixed
+
+- Mongo: dividing by a column with potentially null or zero values does not fail anymore (return null instead) by @CharlesRngrd
+
+## [0.79.4] - 2021-12-20
+
+### Fixed
+
+- Step Forms: changed placeholders colours to help differantiate placehoder with input values
+
+## [0.79.3] - 2021-12-20
+
+### Fixed
+
+- Preview source subset: use correct icon and label
+- Filter step: use correct label for from/until operators
+
+## [0.79.2] - 2021-12-17
+
+### Fixed
+
+- Preview source subset: do not propagate input focus & refresh button click
+
+## [0.79.1] - 2021-12-16
+
+### Added
+- DateRangeToString: export method to use it outside of app
+
 ## [0.79.0] - 2021-12-16
 
 ### Added
@@ -17,11 +56,21 @@ Preview source subset: improve design and move component under domain step
 
 - NewDateInput: send analytics event when selecting a relative date
 
+## Unreleased
+
+## Added
+
+- Cumsum step: can handle multiple columns at once (by @CharlesRngrd)
+
 ## [0.77.0] - 2021-12-06
 
 ### Added
 
 - Preview source rows subset configuration
+
+### Removed
+
+- `listCollections` was unused, remove it from the backendService interface
 
 ## [0.76.2] - 2021-11-22
 
@@ -1150,6 +1199,10 @@ TabbedRangeCalendars: keep selected tab unchanged when updated enabled calendars
 
 ## Unreleased
 
+[0.79.4]: https://github.com/ToucanToco/weaverbird/compare/v0.79.3...v0.79.4
+[0.79.3]: https://github.com/ToucanToco/weaverbird/compare/v0.79.2...v0.79.3
+[0.79.2]: https://github.com/ToucanToco/weaverbird/compare/v0.79.1...v0.79.2
+[0.79.1]: https://github.com/ToucanToco/weaverbird/compare/v0.79.0...v0.79.1
 [0.79.0]: https://github.com/ToucanToco/weaverbird/compare/v0.78.1...v0.79.0
 [0.78.1]: https://github.com/ToucanToco/weaverbird/compare/v0.78.0...v0.78.1
 [0.78.0]: https://github.com/ToucanToco/weaverbird/compare/v0.77.0...v0.78.0

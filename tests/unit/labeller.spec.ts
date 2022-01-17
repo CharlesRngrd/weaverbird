@@ -329,7 +329,7 @@ describe('Labeller', () => {
           operator: 'from',
         },
       };
-      expect(hrl(step)).toEqual('Keep rows where "column1" from 1/1/2021');
+      expect(hrl(step)).toEqual('Keep rows where "column1" starting in/on 1/1/2021');
     });
     it('generates label for relative date', () => {
       const step: S.FilterStep = {
@@ -340,7 +340,7 @@ describe('Labeller', () => {
           operator: 'from',
         },
       };
-      expect(hrl(step)).toEqual('Keep rows where "column1" from 1 years until {{today}}');
+      expect(hrl(step)).toEqual('Keep rows where "column1" starting in/on 1 years until {{today}}');
     });
   });
 
@@ -354,7 +354,7 @@ describe('Labeller', () => {
           operator: 'until',
         },
       };
-      expect(hrl(step)).toEqual('Keep rows where "column1" until 1/1/2021');
+      expect(hrl(step)).toEqual('Keep rows where "column1" ending in/on 1/1/2021');
     });
     it('generates label for relative date', () => {
       const step: S.FilterStep = {
@@ -365,7 +365,7 @@ describe('Labeller', () => {
           operator: 'until',
         },
       };
-      expect(hrl(step)).toEqual('Keep rows where "column1" until 1 years until {{today}}');
+      expect(hrl(step)).toEqual('Keep rows where "column1" ending in/on 1 years until {{today}}');
     });
     it('generates label for variable', () => {
       const step: S.FilterStep = {
@@ -376,7 +376,7 @@ describe('Labeller', () => {
           operator: 'until',
         },
       };
-      expect(hrl(step)).toEqual('Keep rows where "column1" until <%= date.start %>');
+      expect(hrl(step)).toEqual('Keep rows where "column1" ending in/on <%= date.start %>');
     });
   });
 
@@ -665,7 +665,8 @@ describe('Labeller', () => {
     expect(hrl(step)).toEqual('Roll-up hierarchy ["city", "country", "continent"]');
   });
 
-  it('generates label for cumsum steps', () => {
+  it('generates label for cumsum steps with legacy value/newColumn properties', () => {
+    // Test for retrocompatibility purposes
     const step: S.CumSumStep = {
       name: 'cumsum',
       valueColumn: 'VALUE',
@@ -674,6 +675,29 @@ describe('Labeller', () => {
       newColumn: 'MY_NEW_COLUMN',
     };
     expect(hrl(step)).toEqual('Compute cumulated sum of "VALUE"');
+  });
+
+  it('generates label for cumsum steps', () => {
+    const step: S.CumSumStep = {
+      name: 'cumsum',
+      referenceColumn: 'DATE',
+      groupby: ['COUNTRY', 'PRODUCT'],
+      toCumSum: [['VALUE', 'MY_NEW_COLUMN']],
+    };
+    expect(hrl(step)).toEqual('Compute cumulated sum of "VALUE"');
+  });
+
+  it('generates label for cumsum steps with multiple value columns', () => {
+    const step: S.CumSumStep = {
+      name: 'cumsum',
+      referenceColumn: 'DATE',
+      groupby: ['COUNTRY', 'PRODUCT'],
+      toCumSum: [
+        ['VALUE', 'MY_NEW_COLUMN'],
+        ['VALUE_2', 'MY_NEW_COLUMN'],
+      ],
+    };
+    expect(hrl(step)).toEqual('Compute cumulated sum of "VALUE", "VALUE_2"');
   });
 
   it('generates label for evolution steps', () => {
